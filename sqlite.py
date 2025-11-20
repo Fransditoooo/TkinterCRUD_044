@@ -107,6 +107,21 @@ class NilaiApp:
         self.entry_ing = ttk.Entry(inner, width=8)
         self.entry_ing.grid(row=0, column=5)
 
-        # self.lbl_info = ttk.Label(frm_left, text='Isi semua kolom, lalu tekan Submit.', foreground='#333')
-        # self.lbl_info.grid(row=4, column=0, pady=(8,0), sticky='w')
+        rows = fetch_all()
+        if not rows:
+            messagebox.showinfo('Export CSV', 'Tidak ada data untuk diekspor.')
+            return
+        filename = f'nilai_siswa_export_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        with open(filename, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(['id','nama_siswa','biologi','fisika','inggris','prediksi_fakultas'])
+            writer.writerows(rows)
+        messagebox.showinfo('Export CSV', f'Data berhasil diekspor ke {filename}')
+
+
+if __name__ == 'main':
+    init_db()
+    root = tk.Tk()
+    app = NilaiApp(root)
+    root.mainloop()
 
